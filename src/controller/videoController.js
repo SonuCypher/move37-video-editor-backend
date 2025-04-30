@@ -33,3 +33,33 @@ module.exports.uploadFile = async (req, res) => {
     res.status(500).json("internal error");
   }
 };
+
+module.exports.trimFile = async (req, res) => {
+  const { start, end } = req.body;
+  try {
+    const video = await Video.findByPk(req.params.id);
+    if (!video) {
+      console.log("video not found");
+      return res.status(404).send("Video not found");
+    }
+
+    const outputPath = `./outputs/trimmed_${Date.now()}.mp4`;
+    ffmpeg(video.filePath)
+      .setStartTime(start)
+      .setDuration(end - start)
+      .output(outputPath)
+      .on("end", async () => {
+        video.filePath = outputPath;
+        await video.save();
+        res.send({ message: "Video trimmed", path: outputPath });
+      })
+      .on("error", (err) => {
+        console.log("FFmpeg error:", err);
+        res.status(500).send(err.message);
+      })
+      .run();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json("internal error");
+  }
+};

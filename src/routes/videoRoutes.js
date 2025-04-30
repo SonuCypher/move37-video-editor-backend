@@ -2,7 +2,7 @@ const express = require('express');
 const path = require("path");
 const router = express.Router();
 const multer = require('multer');
-const { uploadFile } = require('../controller/videoController');
+const { uploadFile, trimFile } = require('../controller/videoController');
 
 
 const storage = multer.diskStorage({
@@ -15,5 +15,6 @@ const storage = multer.diskStorage({
 
 
   router.post('/upload',upload.single('video'),uploadFile)
+  router.post('/:id/trim',trimFile)
 
 module.exports = router
