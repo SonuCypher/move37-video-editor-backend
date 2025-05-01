@@ -12,7 +12,6 @@ sequelize
   .authenticate()
   .then(() => {
     console.log("connected to database");
-     sequelize.sync({ alter: true });
   })
   .then(()=>{
     console.log("synced all tables")
