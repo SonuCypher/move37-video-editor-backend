@@ -13,9 +13,6 @@ sequelize
   .then(() => {
     console.log("connected to database");
   })
-  .then(()=>{
-    console.log("synced all tables")
-  })
   .catch((err) => {
     console.error("Unable to connect");
     // console.log(err)
