@@ -26,7 +26,7 @@ const uploadFile = async (req, res) => {
         size,
         filePath,
       });
-      res.status(200).json({ message: "video uploaded" });
+      res.status(200).json({ message: "video uploaded",id:video.id });
     });
   } catch (error) {
     console.log(error);

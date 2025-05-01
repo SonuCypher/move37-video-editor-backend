@@ -4,7 +4,7 @@ const path = require('path');
 const directoriesToCreate = ['uploads', 'outputs'];
 
 directoriesToCreate.forEach(dirName => {
-  const dirPath = path.join(__dirname, '..', dirName); // Go up one level from 'scripts' to the root
+  const dirPath = path.join(__dirname, '..', dirName); 
 
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
