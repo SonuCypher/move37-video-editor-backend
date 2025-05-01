@@ -26,7 +26,7 @@ const uploadFile = async (req, res) => {
         size,
         filePath,
       });
-      res.status(200).json(video);
+      res.status(200).json({ message: "video uploaded" });
     });
   } catch (error) {
     console.log(error);
@@ -51,7 +51,7 @@ const trimFile = async (req, res) => {
       .on("end", async () => {
         video.filePath = outputPath;
         await video.save();
-        res.send({ message: "Video trimmed", path: outputPath });
+        res.status(200).send({ message: "Video trimmed" });
       })
       .on("error", (err) => {
         console.log("FFmpeg error:", err);
@@ -79,7 +79,7 @@ const addSubtitle = async (req, res) => {
       .on("end", async () => {
         video.filePath = subtitlePath;
         await video.save();
-        res.send({ message: "Subtitle added", path: subtitlePath });
+        res.status(200).send({ message: "Subtitle added" });
       })
       .on("error", (err) => {
         console.log("FFmpeg error:", err);
@@ -103,7 +103,7 @@ const renderVideo = async (req, res) => {
       video.finalPath = finalPath;
       video.status = "rendered";
       await video.save();
-      res.send({ message: "Video rendered", path: finalPath });
+      res.status(200).send({ message: "Video rendered" });
     });
   } catch (error) {
     console.log(error);
@@ -111,4 +111,16 @@ const renderVideo = async (req, res) => {
   }
 };
 
-module.exports = { uploadFile, trimFile, addSubtitle, renderVideo };
+const downloadVideo = async (req, res) => {
+  try {
+    const video = await Video.findByPk(req.params.id);
+    if (!video || !video.finalPath)
+      return res.status(404).send("Rendered video not found");
+    res.status(200).download(video.finalPath);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json("internal error");
+  }
+};
+
+module.exports = { uploadFile, trimFile, addSubtitle, renderVideo, downloadVideo };
